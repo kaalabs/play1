@@ -55,3 +55,28 @@
 
 - Tag changes and record in `CHANGELOG.md`.
 - Deploy node-specific files to devices via `mpremote`/`rshell`.
+
+### RS485 / Modbus helpers
+
+- Snapshot registers from nodes over RS485: use the VS Code task "Modbus snapshot (aggregator CLI)" and provide your serial port (e.g., `/dev/tty.usbserial-1101`). It prints a one-line JSON of pump, autofill, and boiler status. Requires `pyserial` at runtime.
+
+Register map (Holding Registers 0x03):
+
+- 0x0000: status code
+- 0x0001: reason code
+- 0x0002: tank_ok (0/1; pump/autofill only)
+- 0x0003: reserved
+
+Node addresses (default): pump=1, autofill=2, boiler=3, master=10. See `firmware/common/config.py` BusConfig.
+
+Status/Reason codes:
+
+- Pump
+	- status: 0=idle, 1=run, 2=inhibit, 3=fault
+	- reason: 0=none, 1=rest, 2=rate_limit, 3=tank_not_ok, 4=watchdog_expired, 5=pump_run_timeout
+- Autofill
+	- status: 0=ok, 1=fill, 2=inhibit, 3=fault
+	- reason: 0=none, 1=rate_limit, 2=tank_not_ok, 3=fill_timeout, 4=watchdog_expired
+- Boiler
+	- status: 0=idle, 1=heat/hold, 2=inhibit, 3=fault
+	- reason: 0=none, 1=autofill, 2=sensor_out_of_range, 3=heater_on_timeout, 4=watchdog_expired

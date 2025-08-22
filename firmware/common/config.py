@@ -49,6 +49,15 @@ class TankLevelConfig(NamedTuple):
     hysteresis_pct: float = 2.0   # hysteresis to avoid alert flapping
 
 
+class BusConfig(NamedTuple):
+    # Modbus/RS485 bus configuration and addresses
+    baudrate: int = 9600
+    addr_pump: int = 1
+    addr_autofill: int = 2
+    addr_boiler: int = 3
+    addr_master: int = 10
+
+
 class Pins(NamedTuple):
     # Assign actual GPIOs during bring-up
     heater_ssr: int = 25
@@ -64,6 +73,11 @@ class Pins(NamedTuple):
     tank_uart_id: int = 1
     tank_uart_tx: int = 17
     tank_uart_rx: int = 16
+    # RS485 UART and Driver Enable pin (DE/RE tied)
+    rs485_uart_id: int = 2
+    rs485_tx: int = 15
+    rs485_rx: int = 4
+    rs485_de: int = 5
 
 
 class System(NamedTuple):
@@ -76,5 +90,6 @@ thermistor = ThermistorConfig()
 autofill = AutofillConfig()
 pump = PumpConfig()
 tank = TankLevelConfig()
+bus = BusConfig()
 pins = Pins()
 system = System()

@@ -1,2 +1,5 @@
 pytest==8.2.2
 pytest-timeout==2.3.1
+
+# Optional: needed for Modbus aggregator CLI
+pyserial==3.5
