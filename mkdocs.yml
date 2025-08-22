@@ -1,0 +1,23 @@
+site_name: Domobar Control System
+site_description: Decentralized, safety-first control for VBM Domobar Classic/Standard (RVS)
+site_url: https://example.com
+repo_url: https://github.com/your-org/your-repo
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+nav:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - Safety: safety.md
+  - Hardware: hardware.md
+  - Bring-up: bringup.md
+  - Calibration: calibration.md
+  - Maintenance: maintenance.md
+  - Troubleshooting: troubleshooting.md
+  - Developer Guide: developer_guide.md
+  - Master UX: master_ux.md
+  - Specs: ../SPECS.md
+docs_dir: docs

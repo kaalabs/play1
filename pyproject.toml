@@ -1,0 +1,3 @@
+[tool.pytest.ini_options]
+addopts = "-q --timeout=5"
+pythonpath = ["."]
