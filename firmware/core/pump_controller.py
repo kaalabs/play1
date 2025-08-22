@@ -42,7 +42,7 @@ class PumpController:
             self._pump_on = False
             self._last_stop_s = self._last_time
 
-    def tick(self, now_s: float, brew_switch: bool):
+    def tick(self, now_s: float, brew_switch: bool, tank_ok: bool = True):
         self._last_time = now_s
         if self.wd.expired():
             self.latch.trip("watchdog_expired")
@@ -50,6 +50,11 @@ class PumpController:
         if self.latch.tripped:
             self._safe_off()
             return "fault", self.latch.reason
+
+        # Tank interlock: do not run if tank is not OK
+        if not tank_ok and brew_switch:
+            self._safe_off()
+            return "inhibit", "tank_not_ok"
 
         if not brew_switch:
             # command off

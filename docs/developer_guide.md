@@ -4,6 +4,7 @@
 
 - `firmware/common`: shared config and safety primitives
 - `firmware/core`: autonomous node controllers and HALs
+- `firmware/core/tank_monitor.py`: local tank level state machine (ok/low/critical/unknown)
 - `tests`: CPython unit tests for core logic
 - `docs`: documentation set
 
@@ -38,6 +39,17 @@
 3. Implement feature with minimal HAL surface.
 4. Update docs: architecture, safety (if relevant), bring-up, troubleshooting.
 5. Update `CHANGELOG.md`.
+
+## Tank autonomy refactor
+
+- The tank sensor is now owned by core via `TankMonitor`, which wraps `TankLevel` and applies hysteresis.
+- Controllers accept a new `tank_ok` parameter:
+	- `AutofillController.tick(..., tank_ok=True)` inhibits fill if false.
+	- `PumpController.tick(..., tank_ok=True)` inhibits pump if false.
+- Main loops updated:
+	- `boot_autofill.py` samples `TankMonitor` each cycle and passes `tank_ok`.
+	- `boot_pump.py` does the same for the pump node.
+- The master `tank_service.py` remains for UX/telemetry but is no longer required for safety.
 
 ## Release & Deployment
 

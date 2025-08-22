@@ -14,7 +14,7 @@ class AutofillController:
         self._fill_start_s = 0.0
         self._last_fill_end_s = -1e9
 
-    def tick(self, now_s: float, probe_wet: bool):
+    def tick(self, now_s: float, probe_wet: bool, tank_ok: bool = True):
         self.wd.kick()
         if self.wd.expired():
             self.latch.trip("watchdog_expired")
@@ -25,6 +25,12 @@ class AutofillController:
             return "fault", self.latch.reason
 
         # Debounced semantics handled by higher layer or HAL conditioning assumed
+        # Tank interlock: never autofill if tank is not OK
+        if not tank_ok:
+            self.hal.fill_valve(False)
+            self._fill_active = False
+            return "inhibit", "tank_not_ok"
+
         if probe_wet:
             # Level OK
             if self._fill_active:
